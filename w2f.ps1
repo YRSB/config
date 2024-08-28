@@ -8,7 +8,7 @@ $vtt_files = Get-ChildItem | Where-Object {$_.FullName -match "\w+\.(txt|vtt)$"}
 $folders=Get-ChildItem -Directory
 if(-not (Test-Path .\output)){
     mkdir output
-    Write-Host "已创建输出目录output."
+    Write-Host "mkdir output..."
 }
 
 # convert wav to flac with hightest compression level(8 is hightest)
@@ -17,11 +17,11 @@ foreach($file in $wav_files){
     if(-not (Test-Path .\output\$output)){
         ffmpeg -hide_banner -i .\$file -compression_level 8 .\output\$output
     }
-    Write-Host "文件.\output\$output 已存在，跳过转码."
+    Write-Host "skip existing file .\output\$output."
 }
 
-Write-Host "wav to flac转码完成."
-Write-Host "开始处理lyrics..."
+Write-Host "finish convert wav to flac."
+Write-Host "handling lyrics..."
 
 # TODO: merge LYRICS into TAGS if *.lrc files are exist
 # 情况：
@@ -31,7 +31,7 @@ Write-Host "开始处理lyrics..."
 # 
 
 if(($lrc_files.Count -eq 0) -and ($vtt_files.Count -eq 0)){
-    Write-Host "lyrics不存在, 无需处理."
+    Write-Host "lyrics do not exist"
 }else{
     # convert vtt to lrc
     if(-not ($vtt_files.Count -eq 0)){
@@ -53,9 +53,9 @@ foreach($lrc in $lrc_files){
         $lrcContent = Get-Content $lrc -Encoding UTF8
         if (Get-Command metaflac -ErrorAction SilentlyContinue) {
             metaflac --set-tag="LYRICS=$lrcContent" $lrc_name.flac
-            Write-Host "$(lrc.Name)已嵌入到文件: $($lrc_name.flac)"
+            Write-Host "$(lrc.Name)has been embedded in $($lrc_name.flac)"
         } else {
-            Write-Error "metaflac 工具未找到，请确保它已安装并在系统路径中."
+            Write-Error "metaflac tool not found. Please ensure it is installed and in your system path."
         }
     }
 }
