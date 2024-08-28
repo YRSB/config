@@ -13,8 +13,8 @@ if(-not (Test-Path .\output)){
 
 # convert wav to flac with hightest compression level(8 is hightest)
 foreach($file in $wav_files){
-    $output=[System.IO.Path]::ChangeExtension($file.Name),".flac")
-    if(-not (Test-Path .\output\$output){
+    $output=[System.IO.Path]::ChangeExtension($file.Name),".flac"
+    if(-not (Test-Path .\output\$output)){
         ffmpeg -hide_banner -i .\$file -compression_level 8 .\output\$output
     }
     Write-Host "文件.\output\$output 已存在，跳过转码."
