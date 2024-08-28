@@ -36,7 +36,7 @@ if(($lrc_files.Count -eq 0) -and ($vtt_files.Count -eq 0)){
     # convert vtt to lrc
     if(-not ($vtt_files.Count -eq 0)){
         foreach($file in $vtt_files){
-            $output=$file.BaseName+lrc
+            $output=$file.BaseName+".lrc"
             ffmpeg -hide_banner -i $file.Name .\output\$output
         }
     }else{
@@ -53,9 +53,9 @@ foreach($lrc in $lrc_files){
         $lrcContent = Get-Content $lrc -Encoding UTF8
         if (Get-Command metaflac -ErrorAction SilentlyContinue) {
             metaflac --set-tag="LYRICS=$lrcContent" $lrc_name.flac
-            Write-Host "$()已嵌入到文件: $($lrc_name.flac)"
+            Write-Host "$(lrc.Name)已嵌入到文件: $($lrc_name.flac)"
         } else {
-            Write-Error "metaflac 工具未找到，请确保它已安装并在系统路径中。"
+            Write-Error "metaflac 工具未找到，请确保它已安装并在系统路径中."
         }
     }
 }
