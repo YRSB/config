@@ -46,13 +46,15 @@ if(($lrc_files.Count -eq 0) -and ($vtt_files.Count -eq 0)){
 
 Set-Location .\output
 $lrc_files = Get-ChildItem . -Filter *.lrc
+$flac_files = Get-ChildItem . Filter *.flac
 $ext = ".flac"
 foreach($lrc in $lrc_files){
     $lrc_name = $lrc.Name.Split('.')[0]
+    # if *.flac exist
     if(Test-Path ($lrc_name+$ext)){
         $lrcContent = Get-Content $lrc -Encoding UTF8
         if (Get-Command metaflac -ErrorAction SilentlyContinue) {
-            metaflac --set-tag="LYRICS=$lrcContent" $lrc_name.flac
+            metaflac --set-tag="LYRICS=$lrcContent" .\$lrc_name$ext
             Write-Host "$($lrc.Name) has been embedded in $($lrc_name.flac)"
         } else {
             Write-Error "metaflac not found. Please ensure it is installed and in your system path."
