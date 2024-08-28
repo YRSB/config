@@ -13,7 +13,7 @@ if(-not (Test-Path .\output)){
 
 # convert wav to flac with hightest compression level(8 is hightest)
 foreach($file in $wav_files){
-    $output=[System.IO.Path]::ChangeExtension($file.Name),".flac"
+    $output=[System.IO.Path]::ChangeExtension(($file.Name),".flac")
     if(-not (Test-Path .\output\$output)){
         ffmpeg -hide_banner -i .\$file -compression_level 8 .\output\$output
     }
@@ -37,7 +37,7 @@ if(($lrc_files.Count -eq 0) -and ($vtt_files.Count -eq 0)){
     if(-not ($vtt_files.Count -eq 0)){
         foreach($file in $vtt_files){
             $output=$file.BaseName+".lrc"
-            ffmpeg -hide_banner -i $file.Name .\output\$output
+            ffmpeg -hide_banner -i $file.Name -n .\output\$output
         }
     }else{
         Copy-Item *.lrc .\output\
